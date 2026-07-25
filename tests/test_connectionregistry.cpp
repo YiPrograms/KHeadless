@@ -1,5 +1,6 @@
 #include "connectionregistry.h"
 
+#include <QSignalSpy>
 #include <QTest>
 
 using namespace KHeadless;
@@ -41,6 +42,30 @@ private Q_SLOTS:
                               QStringLiteral("rdp-peer-42")),
                  QStringLiteral("rdp-peer-42"));
         QCOMPARE(registry.controllerId(), QStringLiteral("rdp-peer-42"));
+    }
+
+    void promotesWritableClientAfterViewerOnlyPeriod()
+    {
+        ConnectionRegistry registry;
+        registry.add(QStringLiteral("viewer-one"), QStringLiteral("10.0.0.1"), true);
+        registry.add(QStringLiteral("viewer-two"), QStringLiteral("10.0.0.2"), true);
+        QVERIFY(registry.controllerId().isEmpty());
+
+        const auto writable = registry.add(QStringLiteral("operator"), QStringLiteral("10.0.0.3"));
+        QCOMPARE(registry.controllerId(), writable);
+    }
+
+    void emitsControllerChangeOnHandoff()
+    {
+        ConnectionRegistry registry;
+        const auto first = registry.add(QStringLiteral("alice"), QStringLiteral("10.0.0.1"));
+        const auto second = registry.add(QStringLiteral("bob"), QStringLiteral("10.0.0.2"));
+        QSignalSpy controllerChanged(&registry, &ConnectionRegistry::controllerChanged);
+
+        QVERIFY(registry.remove(second));
+        QCOMPARE(registry.controllerId(), first);
+        QCOMPARE(controllerChanged.count(), 1);
+        QCOMPARE(controllerChanged.constFirst().constFirst().toString(), first);
     }
 };
 

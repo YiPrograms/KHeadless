@@ -55,8 +55,50 @@ private Q_SLOTS:
         QVERIFY2(error.isEmpty(), qPrintable(error));
         QCOMPARE(copy, source);
     }
+
+    void acceptsOneThroughSixteenOutputs()
+    {
+        for (int count = 1; count <= MonitorLayout::MaximumMonitors; ++count) {
+            MonitorLayout layout;
+            for (int index = 0; index < count; ++index) {
+                layout.monitors.append({
+                    .id = QStringLiteral("display-%1").arg(index),
+                    .name = QStringLiteral("Display %1").arg(index),
+                    .x = index * 1920,
+                    .y = 0,
+                    .width = 1920,
+                    .height = 1080,
+                    .scale = 0.5 + (index % 8) * 0.5,
+                    .rotation = (index % 4) * 90,
+                    .enabled = true,
+                    .primary = index == 0,
+                });
+            }
+            const auto validation = layout.validate();
+            QVERIFY2(validation.valid, qPrintable(validation.error));
+        }
+    }
+
+    void rejectsSeventeenOutputs()
+    {
+        MonitorLayout layout;
+        for (int index = 0; index <= MonitorLayout::MaximumMonitors; ++index) {
+            layout.monitors.append({
+                .id = QStringLiteral("display-%1").arg(index),
+                .name = QStringLiteral("Display %1").arg(index),
+                .x = index * 200,
+                .y = 0,
+                .width = 200,
+                .height = 200,
+                .scale = 1.0,
+                .rotation = 0,
+                .enabled = true,
+                .primary = index == 0,
+            });
+        }
+        QVERIFY(!layout.validate().valid);
+    }
 };
 
 QTEST_MAIN(MonitorLayoutTest)
 #include "test_monitorlayout.moc"
-

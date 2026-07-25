@@ -15,11 +15,17 @@ target_link_libraries(kheadlessd PRIVATE
 if(KHEADLESS_BUILD_KRDP)
     target_sources(kheadlessd PRIVATE
         embeddedrdpbackend.cpp
+        rdplayoutconversion.cpp
     )
     target_compile_definitions(kheadlessd PRIVATE KHEADLESS_HAVE_KRDP=1)
     target_link_libraries(kheadlessd PRIVATE KRdp::KRdp Qt6::Gui KF6::GuiAddons)
-    if(BUILD_TESTING AND TARGET displaycontroltest)
-        add_dependencies(kheadlessd displaycontroltest)
+    if(BUILD_TESTING)
+        if(TARGET displaycontroltest)
+            add_dependencies(kheadlessd displaycontroltest)
+        endif()
+        if(TARGET clipboardtest)
+            add_dependencies(kheadlessd clipboardtest)
+        endif()
     endif()
 endif()
 

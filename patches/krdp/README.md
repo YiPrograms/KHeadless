@@ -23,6 +23,11 @@ is local for now and can be pushed unchanged to the future fork remote.
 10. `99c2c20` — negotiate and send 48 kHz stereo playback over `rdpsnd`.
 11. `041d1a9` — transfer Unicode text through `cliprdr`, enforce the
     per-connection ownership gate, and advertise playback audio.
+12. `3b080dd` — exercise all supported monitor counts and build the fork in
+    GitHub Actions.
+13. `867bc5a` — isolate and test Unicode and local-text clipboard codecs.
+14. `c8503bb` — resolve the core Wayland protocol data directory explicitly
+    for clean and containerized builds.
 
 ## Remaining upstream-hardening work
 
