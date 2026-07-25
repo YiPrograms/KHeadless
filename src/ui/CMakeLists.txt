@@ -7,7 +7,7 @@ qt_add_qml_module(kheadlessuimodel
     URI org.kde.kheadless
     VERSION 1.0
     OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/org/kde/kheadless
-    RESOURCE_PREFIX /
+    RESOURCE_PREFIX /qt/qml
     QML_FILES
         qml/KHeadlessView.qml
         qml/OverviewPage.qml
@@ -32,3 +32,11 @@ qt_add_resources(kheadless-settings "settings"
 
 install(TARGETS kheadless-settings RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 install(FILES org.kde.kheadless.desktop DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)
+
+if(BUILD_TESTING)
+    add_test(NAME test_ui_startup COMMAND kheadless-settings --check)
+    set_tests_properties(test_ui_startup PROPERTIES
+        ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software"
+        TIMEOUT 20
+    )
+endif()

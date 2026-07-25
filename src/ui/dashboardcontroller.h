@@ -47,11 +47,13 @@ public:
     int confirmationSeconds() const;
 
     Q_INVOKABLE void refresh();
+    Q_INVOKABLE void reloadLayout();
     Q_INVOKABLE bool applyLayout(bool temporary = true);
     Q_INVOKABLE bool confirmLayout();
     Q_INVOKABLE bool revertLayout();
     Q_INVOKABLE bool setMode(const QString &mode);
     Q_INVOKABLE void updateServerSetting(const QString &key, const QVariant &value);
+    Q_INVOKABLE void reloadServerConfiguration();
     Q_INVOKABLE bool applyServerSettings();
     Q_INVOKABLE void updateMonitor(int index, const QString &key, const QVariant &value);
     Q_INVOKABLE void updateMonitorPosition(int index, int x, int y);
@@ -91,6 +93,8 @@ private:
     QStringList m_profiles;
     QStringList m_users;
     QString m_lastError;
+    bool m_layoutDirty = false;
+    bool m_serverConfigurationDirty = false;
 };
 
 }

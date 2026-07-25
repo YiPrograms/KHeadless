@@ -153,7 +153,13 @@ Item {
                     Label { text: qsTr("Scale"); color: palette.mid }
                     ComboBox {
                         model: ["0.5", "0.75", "1.0", "1.25", "1.5", "2.0", "2.5", "3.0", "4.0"]
-                        currentIndex: Math.max(0, model.indexOf(String(editor.selected.scale)))
+                        currentIndex: {
+                            for (let index = 0; index < model.length; ++index) {
+                                if (Number(model[index]) === Number(editor.selected.scale))
+                                    return index
+                            }
+                            return 2
+                        }
                         onActivated: root.controller.updateMonitor(root.selectedIndex, "scale", Number(currentText))
                     }
                 }
@@ -175,7 +181,7 @@ Item {
 
         RowLayout {
             Item { Layout.fillWidth: true }
-            Button { text: qsTr("Reload"); onClicked: root.controller.refresh() }
+            Button { text: qsTr("Reload"); onClicked: root.controller.reloadLayout() }
             Button { text: qsTr("Apply"); highlighted: true; onClicked: root.controller.applyLayout(true) }
         }
     }

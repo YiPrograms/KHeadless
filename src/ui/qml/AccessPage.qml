@@ -61,7 +61,8 @@ ScrollView {
                     onToggled: root.controller.updateServerSetting("clipboard", checked)
                 }
 
-                Item { Layout.columnSpan: 3; Layout.fillWidth: true }
+                Item { Layout.columnSpan: 2; Layout.fillWidth: true }
+                Button { text: qsTr("Reload"); onClicked: root.controller.reloadServerConfiguration() }
                 Button { text: qsTr("Apply server settings"); onClicked: root.controller.applyServerSettings() }
             }
         }

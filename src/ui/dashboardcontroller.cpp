@@ -85,43 +85,80 @@ void DashboardController::refresh()
         return;
     }
     m_status = statusReply.value();
-    m_monitors = monitorReply.value().toVariantList();
+    const bool layoutUpdated = !m_layoutDirty;
+    if (layoutUpdated) {
+        m_monitors = monitorReply.value().toVariantList();
+    }
     m_connections = connectionReply.value().toVariantList();
     m_diagnostics = diagnosticsReply.value();
-    m_serverConfiguration = serverReply.value();
+    const bool serverConfigurationUpdated = !m_serverConfigurationDirty;
+    if (serverConfigurationUpdated) {
+        m_serverConfiguration = serverReply.value();
+    }
     m_profiles = profilesReply.value();
     m_users = usersReply.value();
     setError(m_diagnostics.value(QStringLiteral("lastError")).toString());
     Q_EMIT statusChanged();
-    Q_EMIT monitorsChanged();
+    if (layoutUpdated) {
+        Q_EMIT monitorsChanged();
+    }
     Q_EMIT connectionsChanged();
     Q_EMIT diagnosticsChanged();
-    Q_EMIT serverConfigurationChanged();
+    if (serverConfigurationUpdated) {
+        Q_EMIT serverConfigurationChanged();
+    }
     Q_EMIT profilesChanged();
     Q_EMIT usersChanged();
+}
+
+void DashboardController::reloadLayout()
+{
+    m_layoutDirty = false;
+    refresh();
 }
 
 bool DashboardController::applyLayout(bool temporary)
 {
     const auto result = callBool(QStringLiteral("ApplyLayout"),
                                  {QVariant::fromValue(ObjectList::fromVariantList(m_monitors)), temporary});
+    if (result) {
+        m_layoutDirty = false;
+    }
     refresh();
     return result;
 }
 
 bool DashboardController::confirmLayout() { return callBool(QStringLiteral("ConfirmLayout")); }
-bool DashboardController::revertLayout() { const auto result = callBool(QStringLiteral("RevertLayout")); refresh(); return result; }
+bool DashboardController::revertLayout()
+{
+    const auto result = callBool(QStringLiteral("RevertLayout"));
+    if (result) {
+        m_layoutDirty = false;
+    }
+    refresh();
+    return result;
+}
 bool DashboardController::setMode(const QString &mode) { const auto result = callBool(QStringLiteral("SetMode"), {mode}); refresh(); return result; }
 
 void DashboardController::updateServerSetting(const QString &key, const QVariant &value)
 {
     m_serverConfiguration.insert(key, value);
+    m_serverConfigurationDirty = true;
     Q_EMIT serverConfigurationChanged();
+}
+
+void DashboardController::reloadServerConfiguration()
+{
+    m_serverConfigurationDirty = false;
+    refresh();
 }
 
 bool DashboardController::applyServerSettings()
 {
     const auto result = callBool(QStringLiteral("ConfigureServer"), {m_serverConfiguration});
+    if (result) {
+        m_serverConfigurationDirty = false;
+    }
     refresh();
     return result;
 }
@@ -134,6 +171,7 @@ void DashboardController::updateMonitor(int index, const QString &key, const QVa
     auto monitor = m_monitors.at(index).toMap();
     monitor.insert(key, value);
     m_monitors[index] = monitor;
+    m_layoutDirty = true;
     Q_EMIT monitorsChanged();
 }
 
@@ -169,6 +207,7 @@ void DashboardController::addMonitor()
         {QStringLiteral("enabled"), true},
         {QStringLiteral("primary"), false},
     });
+    m_layoutDirty = true;
     Q_EMIT monitorsChanged();
 }
 
@@ -182,6 +221,7 @@ void DashboardController::removeMonitor(int index)
     if (wasPrimary && !m_monitors.isEmpty()) {
         makePrimary(0);
     }
+    m_layoutDirty = true;
     Q_EMIT monitorsChanged();
 }
 
@@ -192,6 +232,7 @@ void DashboardController::makePrimary(int index)
         monitor.insert(QStringLiteral("primary"), i == index);
         m_monitors[i] = monitor;
     }
+    m_layoutDirty = true;
     Q_EMIT monitorsChanged();
 }
 
@@ -206,6 +247,9 @@ bool DashboardController::saveProfile(const QString &name)
 bool DashboardController::applyProfile(const QString &name)
 {
     const auto result = callBool(QStringLiteral("ApplyProfile"), {name, true});
+    if (result) {
+        m_layoutDirty = false;
+    }
     refresh();
     return result;
 }
