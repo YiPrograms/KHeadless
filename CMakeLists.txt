@@ -59,12 +59,18 @@ if(KHEADLESS_BUILD_KRDP)
     find_package(KF6GuiAddons 6.10 REQUIRED)
     set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
     set(BUILD_PLASMA_SESSION ON CACHE BOOL "" FORCE)
+    # KRdp has no stable ABI across Plasma releases. Link the fork privately so
+    # installing KHeadless can never replace a distribution's libKRdp.
+    set(KHEADLESS_SAVED_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
+    set(BUILD_SHARED_LIBS OFF)
     add_subdirectory(third_party/krdp EXCLUDE_FROM_ALL)
-    install(TARGETS KRdp
-        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-    )
+    set(BUILD_SHARED_LIBS ${KHEADLESS_SAVED_BUILD_SHARED_LIBS})
+    unset(KHEADLESS_SAVED_BUILD_SHARED_LIBS)
+    get_target_property(KHEADLESS_KRDP_LIBRARY_TYPE KRdp TYPE)
+    if(NOT KHEADLESS_KRDP_LIBRARY_TYPE STREQUAL "STATIC_LIBRARY")
+        message(FATAL_ERROR "The embedded KRdp fork must be a private static library")
+    endif()
+    unset(KHEADLESS_KRDP_LIBRARY_TYPE)
 endif()
 
 add_subdirectory(src)

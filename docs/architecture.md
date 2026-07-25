@@ -30,6 +30,16 @@ adding clients does not duplicate host-side video encoding. A lightweight
 workspace session maps absolute input coordinates while the elected
 connection is permitted to inject input.
 
+The patched KRdp target is linked statically into `kheadlessd`. KHeadless
+never installs `libKRdp.so`, so a fork based on one Plasma release cannot
+replace or break the distribution's stock KRdp ABI.
+
+Virtual monitors require a KWin output backend that implements virtual-output
+creation. Normal host Plasma sessions using DRM, and KWin's virtual backend,
+support this path. KWin's nested Wayland backend currently returns an
+unregistered output for this protocol request; run KHeadless against the real
+host session rather than inside a second nested Plasma session.
+
 FreeRDP performs NLA/NTLM before exposing a connection to KRdp. KHeadless
 therefore loads dedicated protocol secrets from the desktop keyring and KRdp
 creates a mode-0600, per-handshake SAM file that is removed immediately after

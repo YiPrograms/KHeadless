@@ -9,11 +9,12 @@ the automated test suite and staged installation have passed.
 systemctl --user import-environment \
   WAYLAND_DISPLAY DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE
 systemctl --user daemon-reload
-systemctl --user enable --now kheadlessd.service
+kbuildsycoca6 --noincremental
+systemctl --user enable --now app-org.kde.kheadlessd.service
 kheadlessctl passwd test-operator
 kheadlessctl start
 tools/live-smoke-test
-journalctl --user -u kheadlessd.service -f
+journalctl --user -u app-org.kde.kheadlessd.service -f
 ```
 
 Do not hardcode `wayland-0` in the installed unit. Plasma must populate the

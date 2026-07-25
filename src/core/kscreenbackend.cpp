@@ -50,17 +50,21 @@ bool KScreenBackend::apply(const MonitorLayout &layout, QString *error)
     for (const auto &requested : normalized.monitors) {
         KScreen::OutputPtr output;
         for (const auto &candidate : config->outputs()) {
-            if (candidate->name() == requested.id || candidate->name() == requested.name) {
+            if (candidate->name() == requested.id
+                || candidate->name() == requested.name
+                || candidate->name() == QStringLiteral("Virtual-") + requested.id
+                || candidate->name() == QStringLiteral("Virtual-") + requested.name) {
                 output = candidate;
                 break;
             }
         }
         if (!output) {
-            // Stock KRdp names its virtual output after the size expression,
-            // whereas the patched backend uses KHeadless's stable output id.
-            // Unknown-type outputs are therefore a safe compatibility match.
+            // Older stock KRdp versions name their KWin virtual output after a
+            // size expression. Restrict the compatibility fallback to virtual
+            // connectors so a physical or nested output is never rearranged.
             for (const auto &candidate : config->outputs()) {
                 if (candidate->isConnected() && candidate->type() == KScreen::Output::Unknown
+                    && candidate->name().startsWith(QStringLiteral("Virtual-"))
                     && !usedOutputs.contains(candidate->id())) {
                     output = candidate;
                     break;

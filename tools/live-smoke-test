@@ -30,10 +30,10 @@ printf 'KHeadless live-session smoke test\n'
     && pass "session D-Bus socket" \
     || fail "session D-Bus socket"
 
-if systemctl --user is-active --quiet kheadlessd.service; then
-    pass "kheadlessd.service active"
+if systemctl --user is-active --quiet app-org.kde.kheadlessd.service; then
+    pass "app-org.kde.kheadlessd.service active"
 else
-    fail "kheadlessd.service active"
+    fail "app-org.kde.kheadlessd.service active"
 fi
 
 if kheadlessctl diagnostics; then

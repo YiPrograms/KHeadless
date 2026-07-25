@@ -10,7 +10,8 @@ Install and enable the user service:
 
 ```sh
 systemctl --user daemon-reload
-systemctl --user enable --now kheadlessd.service
+kbuildsycoca6 --noincremental
+systemctl --user enable --now app-org.kde.kheadlessd.service
 kheadlessctl diagnostics
 ```
 
@@ -43,4 +44,3 @@ render node is preferred. Verify `/dev/dri/renderD*`; on systems without one,
 software rendering is possible but video encoding performance will be lower.
 Do not grant the container broad `/dev` access—pass only the selected render
 node.
-

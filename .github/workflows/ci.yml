@@ -46,8 +46,9 @@ jobs:
         run: |
           DESTDIR="$RUNNER_TEMP/install" cmake --install build-embedded
           test -x "$RUNNER_TEMP/install/usr/bin/kheadlessd"
-          test -e "$RUNNER_TEMP/install/usr/lib/libKRdp.so"
           test -e "$RUNNER_TEMP/install/usr/share/applications/org.kde.kheadlessd.desktop"
+          ! find "$RUNNER_TEMP/install" -name 'libKRdp*' -print -quit | grep -q .
+          ! ldd "$RUNNER_TEMP/install/usr/bin/kheadlessd" | grep -q libKRdp
 
       - name: Build compatibility backend
         run: |
@@ -97,5 +98,5 @@ jobs:
           ctest --test-dir build --output-on-failure
           DESTDIR="$RUNNER_TEMP/install" cmake --install build
           test -x "$RUNNER_TEMP/install/usr/bin/kheadlessd"
-          test -e "$RUNNER_TEMP/install/usr/lib/$(dpkg-architecture -qDEB_HOST_MULTIARCH)/libKRdp.so" \
-            || test -e "$RUNNER_TEMP/install/usr/lib/libKRdp.so"
+          ! find "$RUNNER_TEMP/install" -name 'libKRdp*' -print -quit | grep -q .
+          ! ldd "$RUNNER_TEMP/install/usr/bin/kheadlessd" | grep -q libKRdp

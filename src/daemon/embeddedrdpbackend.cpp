@@ -272,9 +272,13 @@ public:
                        q, [outputPointer]() { outputPointer->ready = true; });
       QObject::connect(output->session.get(), &KRdp::AbstractSession::error, q,
                        [outputPointer]() {
+                         const auto reason = outputPointer->session->lastError();
                          outputPointer->error =
-                             QStringLiteral("KWin rejected virtual output %1")
-                                 .arg(outputPointer->monitor.id);
+                             reason.isEmpty()
+                                 ? QStringLiteral("KWin rejected virtual output %1")
+                                       .arg(outputPointer->monitor.id)
+                                 : QStringLiteral("KWin rejected virtual output %1: %2")
+                                       .arg(outputPointer->monitor.id, reason);
                        });
       outputs.emplace(monitor.id, std::move(output));
       for (auto &[id, connection] : connections) {

@@ -1,7 +1,7 @@
 [Unit]
 Description=KHeadless Plasma RDP coordinator
 Documentation=file:@CMAKE_INSTALL_FULL_DOCDIR@/README.md
-After=graphical-session.target pipewire.service
+After=plasma-core.target plasma-xdg-desktop-portal-kde.service pipewire.service
 PartOf=graphical-session.target
 
 [Service]
@@ -17,4 +17,4 @@ ProtectHome=read-only
 ReadWritePaths=%h/.config %h/.local/share
 
 [Install]
-WantedBy=graphical-session.target
+WantedBy=plasma-workspace.target
