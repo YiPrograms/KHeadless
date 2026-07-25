@@ -48,6 +48,8 @@ The automated suite is followed by the
 Run the daemon and inspect it:
 
 ```sh
+systemctl --user daemon-reload
+kbuildsycoca6 --noincremental
 systemctl --user enable --now app-org.kde.kheadlessd.service
 kheadlessctl status
 kheadless-settings
