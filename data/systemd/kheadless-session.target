@@ -1,0 +1,9 @@
+[Unit]
+Description=KHeadless remote Plasma workspace
+Requires=graphical-session.target
+After=graphical-session.target
+Wants=kheadlessd.service
+
+[Install]
+WantedBy=default.target
+

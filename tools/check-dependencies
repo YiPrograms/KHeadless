@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: GPL-2.0-or-later
+set -u
+
+failed=0
+
+check_command() {
+    if command -v "$1" >/dev/null 2>&1; then
+        printf 'ok       %s\n' "$1"
+    else
+        printf 'missing  %s\n' "$1"
+        failed=1
+    fi
+}
+
+check_pkg() {
+    if pkg-config --exists "$1" 2>/dev/null; then
+        printf 'ok       pkg-config:%s (%s)\n' "$1" "$(pkg-config --modversion "$1")"
+    else
+        printf 'missing  pkg-config:%s\n' "$1"
+        failed=1
+    fi
+}
+
+printf 'KHeadless dependency check\n'
+check_command cmake
+check_command ninja
+check_command c++
+check_command pkg-config
+check_command qmake6
+check_command plasmashell
+check_command kwin_wayland
+check_command systemctl
+check_command openssl
+check_command pw-cat
+check_pkg libsodium
+check_pkg libpipewire-0.3
+check_pkg freerdp3
+check_pkg freerdp-server3
+check_pkg winpr3
+
+plasma_version="$(plasmashell --version 2>/dev/null | sed -n 's/.* \([0-9][0-9.]*\)$/\1/p' | head -1)"
+if [[ -z "$plasma_version" ]]; then
+    plasma_version="$(kwin_wayland --version 2>/dev/null | sed -n 's/.* \([0-9][0-9.]*\)$/\1/p' | head -1)"
+fi
+qt_version="$(qmake6 -query QT_VERSION 2>/dev/null || true)"
+printf 'detected  Plasma %s\n' "${plasma_version:-unknown}"
+printf 'detected  Qt %s\n' "${qt_version:-unknown}"
+
+if [[ -r /etc/os-release ]]; then
+    # shellcheck disable=SC1091
+    . /etc/os-release
+    case "${ID_LIKE:-$ID}" in
+        *arch*) guide=arch.md ;;
+        *fedora*|*rhel*) guide=fedora.md ;;
+        *debian*) guide=debian.md ;;
+        *suse*) guide=opensuse.md ;;
+        *) guide=generic.md ;;
+    esac
+    if [[ "${ID:-}" == "ubuntu" ]]; then
+        guide=ubuntu.md
+    fi
+    printf 'guide     docs/install/%s\n' "$guide"
+fi
+
+if [[ "$failed" -ne 0 ]]; then
+    printf '\nInstall missing items using the indicated distribution guide.\n'
+fi
+exit "$failed"

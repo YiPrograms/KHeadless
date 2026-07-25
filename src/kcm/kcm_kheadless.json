@@ -1,0 +1,17 @@
+{
+    "KPlugin": {
+        "Name": "KHeadless Remote Workspace",
+        "Description": "Configure RDP, virtual displays, access, and diagnostics",
+        "Icon": "preferences-desktop-display",
+        "License": "GPL-2.0-or-later",
+        "Version": "0.1.0",
+        "Website": "https://github.com/kheadless/kheadless"
+    },
+    "X-KDE-System-Settings-Parent-Category": "network",
+    "X-KDE-Weight": 75,
+    "X-KDE-Keywords": "rdp,remote,desktop,display,monitor,headless,krdp",
+    "X-KDE-OnlyShowOnQtPlatforms": [
+        "wayland"
+    ]
+}
+

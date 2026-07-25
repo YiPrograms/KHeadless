@@ -1,0 +1,29 @@
+services:
+  kheadlessd:
+    build:
+      context: ..
+      dockerfile: container/Containerfile
+    image: kheadless:local
+    user: "${KHEADLESS_UID:?set KHEADLESS_UID}:${KHEADLESS_GID:?set KHEADLESS_GID}"
+    network_mode: host
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      XDG_RUNTIME_DIR: "${KHEADLESS_RUNTIME_DIR:?set KHEADLESS_RUNTIME_DIR}"
+      WAYLAND_DISPLAY: "${KHEADLESS_WAYLAND:?set KHEADLESS_WAYLAND}"
+      PIPEWIRE_REMOTE: "${KHEADLESS_PIPEWIRE:-pipewire-0}"
+      DBUS_SESSION_BUS_ADDRESS: "unix:path=${KHEADLESS_RUNTIME_DIR}/bus"
+      XDG_CONFIG_HOME: "/var/lib/kheadless/config"
+      XDG_DATA_HOME: "/var/lib/kheadless/data"
+    volumes:
+      - "${KHEADLESS_RUNTIME_DIR}/${KHEADLESS_WAYLAND}:${KHEADLESS_RUNTIME_DIR}/${KHEADLESS_WAYLAND}"
+      - "${KHEADLESS_RUNTIME_DIR}/${KHEADLESS_PIPEWIRE:-pipewire-0}:${KHEADLESS_RUNTIME_DIR}/${KHEADLESS_PIPEWIRE:-pipewire-0}"
+      - "${KHEADLESS_RUNTIME_DIR}/bus:${KHEADLESS_RUNTIME_DIR}/bus"
+      - "${KHEADLESS_STATE_DIR:?set KHEADLESS_STATE_DIR}:/var/lib/kheadless"
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    restart: unless-stopped
+

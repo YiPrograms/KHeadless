@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=KHeadless RDP Service
+Comment=Expose the current Plasma session through KRdp
+Exec=kheadlessd
+Icon=preferences-system-network-remote
+NoDisplay=true
+X-KDE-Wayland-Interfaces=org_kde_kwin_fake_input,zkde_screencast_unstable_v1

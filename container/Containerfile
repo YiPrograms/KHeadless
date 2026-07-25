@@ -1,0 +1,30 @@
+FROM archlinux:base-devel AS build
+
+RUN pacman -Syu --noconfirm --needed \
+    cmake ninja git pkgconf extra-cmake-modules \
+    qt6-base qt6-declarative qt6-wayland \
+    kconfig kdbusaddons kcmutils ki18n kcoreaddons kguiaddons kstatusnotifieritem kcrash \
+    libkscreen kpipewire plasma-wayland-protocols \
+    freerdp libxkbcommon libsodium qtkeychain-qt6
+
+WORKDIR /src
+COPY . .
+RUN cmake -S . -B /build -G Ninja \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DCMAKE_INSTALL_PREFIX=/usr \
+      -DKHEADLESS_BUILD_UI=OFF \
+      -DKHEADLESS_BUILD_KCM=OFF \
+      -DKHEADLESS_BUILD_KRDP=ON \
+      -DBUILD_TESTING=OFF \
+ && cmake --build /build \
+ && DESTDIR=/stage cmake --install /build
+
+FROM archlinux:base
+RUN pacman -Syu --noconfirm --needed \
+      qt6-base qt6-wayland kconfig kguiaddons libkscreen kpipewire freerdp \
+      libxkbcommon libsodium openssl pipewire pipewire-audio qtkeychain-qt6 \
+ && pacman -Scc --noconfirm
+COPY --from=build /stage/ /
+
+USER 1000:1000
+ENTRYPOINT ["/usr/bin/kheadlessd"]

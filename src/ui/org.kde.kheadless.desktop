@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=KHeadless
+Comment=Configure the Plasma RDP workspace
+Exec=kheadless-settings
+Icon=preferences-desktop-display
+Type=Application
+Categories=Qt;KDE;Settings;Network;
+StartupNotify=true
+

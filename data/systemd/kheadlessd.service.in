@@ -1,0 +1,20 @@
+[Unit]
+Description=KHeadless Plasma RDP coordinator
+Documentation=file:@CMAKE_INSTALL_FULL_DOCDIR@/README.md
+After=graphical-session.target pipewire.service
+PartOf=graphical-session.target
+
+[Service]
+Type=dbus
+BusName=org.kde.KHeadless1
+ExecStart=@CMAKE_INSTALL_FULL_BINDIR@/kheadlessd
+Restart=on-failure
+RestartSec=2
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=%h/.config %h/.local/share
+
+[Install]
+WantedBy=graphical-session.target
