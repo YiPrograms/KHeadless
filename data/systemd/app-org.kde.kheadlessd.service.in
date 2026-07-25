@@ -14,7 +14,9 @@ NoNewPrivileges=yes
 PrivateTmp=yes
 ProtectSystem=strict
 ProtectHome=read-only
+RuntimeDirectory=krdp
 ReadWritePaths=%h/.config %h/.local/share
+ReadWritePaths=%t/krdp
 
 [Install]
 WantedBy=plasma-workspace.target

@@ -19,6 +19,14 @@ assert_file_contains(
     "BusName=org.kde.KHeadless1"
 )
 assert_file_contains(
+    "${SYSTEMD_FILE}"
+    "RuntimeDirectory=krdp"
+)
+assert_file_contains(
+    "${SYSTEMD_FILE}"
+    "ReadWritePaths=%t/krdp"
+)
+assert_file_contains(
     "${DBUS_FILE}"
     "SystemdService=app-org.kde.kheadlessd.service"
 )
