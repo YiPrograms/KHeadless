@@ -15,10 +15,12 @@ On a qualifying release:
 sudo apt update
 sudo apt install \
   build-essential cmake ninja-build git pkgconf extra-cmake-modules \
-  qt6-base-dev qt6-declarative-dev qt6-wayland-dev \
-  libkf6coreaddons-dev libkf6guiaddons-dev libkf6kcmutils-dev libkscreen-dev libkpipewire-dev \
+  qt6-base-dev qt6-base-private-dev qt6-declarative-dev qt6-wayland-dev \
+  libkf6config-dev libkf6dbusaddons-dev libkf6coreaddons-dev \
+  libkf6guiaddons-dev libkf6kcmutils-dev libkf6i18n-dev \
+  libkf6statusnotifieritem-dev libkf6crash-dev libkscreen-dev libkpipewire-dev \
   plasma-wayland-protocols freerdp3-dev libwinpr3-dev \
-  qtkeychain-qt6-dev libxkbcommon-dev libsodium-dev \
+  qtkeychain-qt6-dev libwayland-dev libxkbcommon-dev libsodium-dev \
   libpipewire-0.3-dev pipewire pipewire-bin openssl
 ```
 

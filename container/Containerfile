@@ -2,7 +2,7 @@ FROM archlinux:base-devel AS build
 
 RUN pacman -Syu --noconfirm --needed \
     cmake ninja git pkgconf extra-cmake-modules \
-    qt6-base qt6-declarative qt6-wayland \
+    qt6-base qt6-declarative qt6-wayland wayland \
     kconfig kdbusaddons kcmutils ki18n kcoreaddons kguiaddons kstatusnotifieritem kcrash \
     libkscreen kpipewire plasma-wayland-protocols \
     freerdp libxkbcommon libsodium qtkeychain-qt6
@@ -20,6 +20,11 @@ RUN cmake -S . -B /build -G Ninja \
  && DESTDIR=/stage cmake --install /build
 
 FROM archlinux:base
+
+LABEL org.opencontainers.image.source="https://github.com/YiPrograms/KHeadless"
+LABEL org.opencontainers.image.description="Host-native Plasma RDP coordinator"
+LABEL org.opencontainers.image.licenses="GPL-2.0-or-later"
+
 RUN pacman -Syu --noconfirm --needed \
       qt6-base qt6-wayland kconfig kguiaddons libkscreen kpipewire freerdp \
       libxkbcommon libsodium openssl pipewire pipewire-audio qtkeychain-qt6 \

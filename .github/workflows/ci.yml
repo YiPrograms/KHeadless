@@ -1,0 +1,101 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  arch:
+    name: Arch Linux (embedded and compatibility)
+    runs-on: ubuntu-latest
+    container: archlinux:base-devel
+    steps:
+      - name: Install dependencies
+        run: |
+          pacman -Syu --noconfirm --needed \
+            git cmake ninja pkgconf extra-cmake-modules appstream \
+            qt6-base qt6-declarative qt6-wayland wayland \
+            kconfig kdbusaddons kcmutils ki18n kcoreaddons kguiaddons \
+            kstatusnotifieritem kcrash libkscreen kpipewire \
+            plasma-wayland-protocols freerdp qtkeychain-qt6 \
+            libxkbcommon libsodium pipewire
+
+      - uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - name: Configure embedded backend
+        run: |
+          cmake -S . -B build-embedded -G Ninja \
+            -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+            -DCMAKE_INSTALL_PREFIX=/usr \
+            -DKHEADLESS_BUILD_KRDP=ON \
+            -DBUILD_TESTING=ON
+
+      - name: Build and test embedded backend
+        run: |
+          cmake --build build-embedded --parallel 2
+          ctest --test-dir build-embedded --output-on-failure
+
+      - name: Verify staged install
+        run: |
+          DESTDIR="$RUNNER_TEMP/install" cmake --install build-embedded
+          test -x "$RUNNER_TEMP/install/usr/bin/kheadlessd"
+          test -e "$RUNNER_TEMP/install/usr/lib/libKRdp.so"
+          test -e "$RUNNER_TEMP/install/usr/share/applications/org.kde.kheadlessd.desktop"
+
+      - name: Build compatibility backend
+        run: |
+          cmake -S . -B build-compat -G Ninja \
+            -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+            -DKHEADLESS_BUILD_KRDP=OFF \
+            -DKHEADLESS_BUILD_UI=OFF \
+            -DKHEADLESS_BUILD_KCM=OFF \
+            -DBUILD_TESTING=ON
+          cmake --build build-compat --parallel 2
+          ctest --test-dir build-compat --output-on-failure
+
+  debian:
+    name: Debian 13 (embedded)
+    runs-on: ubuntu-latest
+    container: debian:trixie
+    steps:
+      - name: Install dependencies
+        run: |
+          apt-get update
+          DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+            ca-certificates git build-essential cmake ninja-build pkgconf \
+            extra-cmake-modules appstream \
+            qt6-base-dev qt6-base-private-dev qt6-declarative-dev qt6-wayland-dev \
+            libkf6config-dev libkf6dbusaddons-dev libkf6kcmutils-dev \
+            libkf6i18n-dev libkf6coreaddons-dev libkf6guiaddons-dev \
+            libkf6statusnotifieritem-dev libkf6crash-dev \
+            libkscreen-dev libkpipewire-dev plasma-wayland-protocols \
+            freerdp3-dev libwinpr3-dev qtkeychain-qt6-dev \
+            libwayland-dev libxkbcommon-dev libsodium-dev libpipewire-0.3-dev
+
+      - uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - name: Configure
+        run: |
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+            -DCMAKE_INSTALL_PREFIX=/usr \
+            -DKHEADLESS_BUILD_KRDP=ON \
+            -DBUILD_TESTING=ON
+
+      - name: Build, test, and install
+        run: |
+          cmake --build build --parallel 2
+          ctest --test-dir build --output-on-failure
+          DESTDIR="$RUNNER_TEMP/install" cmake --install build
+          test -x "$RUNNER_TEMP/install/usr/bin/kheadlessd"
+          test -e "$RUNNER_TEMP/install/usr/lib/$(dpkg-architecture -qDEB_HOST_MULTIARCH)/libKRdp.so" \
+            || test -e "$RUNNER_TEMP/install/usr/lib/libKRdp.so"

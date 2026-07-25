@@ -14,11 +14,17 @@ logical:
     - pkg_config
     - git
     - qt6_base_devel
+    - qt6_base_private_devel
     - qt6_declarative_devel
     - kf6_screen_devel
+    - kf6_config_devel
+    - kf6_dbusaddons_devel
     - kf6_kcmutils_devel
+    - kf6_i18n_devel
     - kf6_coreaddons_devel
     - kf6_guiaddons_devel
+    - kf6_statusnotifieritem_devel
+    - kf6_crash_devel
     - extra_cmake_modules
     - libsodium_devel
   krdp_backend:
@@ -27,6 +33,7 @@ logical:
     - kpipewire_devel
     - pipewire_devel
     - qt6_wayland_devel
+    - wayland_devel
     - plasma_wayland_protocols
     - qtkeychain_qt6_devel
     - libxkbcommon_devel
@@ -45,12 +52,19 @@ packages:
     pkg_config: pkgconf
     git: git
     qt6_base_devel: qt6-base
+    qt6_base_private_devel: qt6-base
     qt6_declarative_devel: qt6-declarative
     qt6_wayland_devel: qt6-wayland
+    wayland_devel: wayland
     kf6_screen_devel: libkscreen
+    kf6_config_devel: kconfig
+    kf6_dbusaddons_devel: kdbusaddons
     kf6_kcmutils_devel: kcmutils
+    kf6_i18n_devel: ki18n
     kf6_coreaddons_devel: kcoreaddons
     kf6_guiaddons_devel: kguiaddons
+    kf6_statusnotifieritem_devel: kstatusnotifieritem
+    kf6_crash_devel: kcrash
     extra_cmake_modules: extra-cmake-modules
     libsodium_devel: libsodium
     freerdp_server_devel: freerdp
@@ -68,12 +82,19 @@ packages:
     pkg_config: pkgconf
     git: git
     qt6_base_devel: qt6-base-dev
+    qt6_base_private_devel: qt6-base-private-dev
     qt6_declarative_devel: qt6-declarative-dev
     qt6_wayland_devel: qt6-wayland-dev
+    wayland_devel: libwayland-dev
     kf6_screen_devel: libkscreen-dev
+    kf6_config_devel: libkf6config-dev
+    kf6_dbusaddons_devel: libkf6dbusaddons-dev
     kf6_kcmutils_devel: libkf6kcmutils-dev
+    kf6_i18n_devel: libkf6i18n-dev
     kf6_coreaddons_devel: libkf6coreaddons-dev
     kf6_guiaddons_devel: libkf6guiaddons-dev
+    kf6_statusnotifieritem_devel: libkf6statusnotifieritem-dev
+    kf6_crash_devel: libkf6crash-dev
     extra_cmake_modules: extra-cmake-modules
     libsodium_devel: libsodium-dev
     freerdp_server_devel: freerdp3-dev
@@ -91,12 +112,19 @@ packages:
     pkg_config: pkgconf-pkg-config
     git: git
     qt6_base_devel: qt6-qtbase-devel
+    qt6_base_private_devel: qt6-qtbase-private-devel
     qt6_declarative_devel: qt6-qtdeclarative-devel
     qt6_wayland_devel: qt6-qtwayland-devel
+    wayland_devel: wayland-devel
     kf6_screen_devel: libkscreen-devel
+    kf6_config_devel: kf6-kconfig-devel
+    kf6_dbusaddons_devel: kf6-kdbusaddons-devel
     kf6_kcmutils_devel: kf6-kcmutils-devel
+    kf6_i18n_devel: kf6-ki18n-devel
     kf6_coreaddons_devel: kf6-kcoreaddons-devel
     kf6_guiaddons_devel: kf6-kguiaddons-devel
+    kf6_statusnotifieritem_devel: kf6-kstatusnotifieritem-devel
+    kf6_crash_devel: kf6-kcrash-devel
     extra_cmake_modules: extra-cmake-modules
     libsodium_devel: libsodium-devel
     freerdp_server_devel: freerdp-devel
@@ -114,12 +142,19 @@ packages:
     pkg_config: pkgconf
     git: git
     qt6_base_devel: qt6-base-devel
+    qt6_base_private_devel: qt6-base-private-devel
     qt6_declarative_devel: qt6-declarative-devel
     qt6_wayland_devel: qt6-wayland-devel
+    wayland_devel: wayland-devel
     kf6_screen_devel: libkscreen6-devel
+    kf6_config_devel: kf6-kconfig-devel
+    kf6_dbusaddons_devel: kf6-kdbusaddons-devel
     kf6_kcmutils_devel: kf6-kcmutils-devel
+    kf6_i18n_devel: kf6-ki18n-devel
     kf6_coreaddons_devel: kf6-kcoreaddons-devel
     kf6_guiaddons_devel: kf6-kguiaddons-devel
+    kf6_statusnotifieritem_devel: kf6-kstatusnotifieritem-devel
+    kf6_crash_devel: kf6-kcrash-devel
     extra_cmake_modules: kf6-extra-cmake-modules
     libsodium_devel: libsodium-devel
     freerdp_server_devel: freerdp-devel

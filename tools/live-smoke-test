@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: GPL-2.0-or-later
+set -u
+
+failed=0
+runtime_directory="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
+wayland_display="${WAYLAND_DISPLAY:-}"
+
+pass() {
+    printf 'ok       %s\n' "$1"
+}
+
+fail() {
+    printf 'failed   %s\n' "$1"
+    failed=1
+}
+
+if [[ -z "$wayland_display" ]]; then
+    wayland_display="$(find "$runtime_directory" -maxdepth 1 -type s -name 'wayland-*' -printf '%f\n' 2>/dev/null | sort | head -1)"
+fi
+
+printf 'KHeadless live-session smoke test\n'
+[[ -n "$wayland_display" && -S "$runtime_directory/$wayland_display" ]] \
+    && pass "Wayland socket $wayland_display" \
+    || fail "Wayland socket"
+[[ -S "$runtime_directory/pipewire-0" ]] \
+    && pass "PipeWire socket" \
+    || fail "PipeWire socket"
+[[ -S "$runtime_directory/bus" ]] \
+    && pass "session D-Bus socket" \
+    || fail "session D-Bus socket"
+
+if systemctl --user is-active --quiet kheadlessd.service; then
+    pass "kheadlessd.service active"
+else
+    fail "kheadlessd.service active"
+fi
+
+if kheadlessctl diagnostics; then
+    pass "D-Bus diagnostics"
+else
+    fail "D-Bus diagnostics"
+fi
+
+if ss -ltn | grep -qE '[:.]3389[[:space:]]'; then
+    pass "TCP 3389 listening"
+else
+    fail "TCP 3389 listening"
+fi
+
+exit "$failed"

@@ -6,11 +6,13 @@ Fedora releases whose installed Plasma version is 6.3 or newer are supported.
 plasmashell --version
 sudo dnf install \
   gcc-c++ cmake ninja-build git pkgconf-pkg-config extra-cmake-modules \
-  qt6-qtbase-devel qt6-qtdeclarative-devel qt6-qtwayland-devel \
-  kf6-kcoreaddons-devel kf6-kguiaddons-devel kf6-kcmutils-devel libkscreen-devel \
+  qt6-qtbase-devel qt6-qtbase-private-devel qt6-qtdeclarative-devel qt6-qtwayland-devel \
+  kf6-kconfig-devel kf6-kdbusaddons-devel kf6-kcoreaddons-devel \
+  kf6-kguiaddons-devel kf6-kcmutils-devel kf6-ki18n-devel \
+  kf6-kstatusnotifieritem-devel kf6-kcrash-devel libkscreen-devel \
   kpipewire-devel plasma-wayland-protocols-devel \
   freerdp-devel libwinpr-devel qtkeychain-qt6-devel \
-  libxkbcommon-devel libsodium-devel pipewire-devel pipewire-utils openssl
+  wayland-devel libxkbcommon-devel libsodium-devel pipewire-devel pipewire-utils openssl
 ```
 
 Fedora publishes both

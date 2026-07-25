@@ -42,6 +42,9 @@ ctest --test-dir build --output-on-failure
 cmake --install build
 ```
 
+The automated suite is followed by the
+[live interoperability matrix](docs/testing.md) for FreeRDP and Windows mstsc.
+
 Run the daemon and inspect it:
 
 ```sh

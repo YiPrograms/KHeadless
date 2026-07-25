@@ -7,8 +7,9 @@ before building; partial upgrades are not supported.
 sudo pacman -Syu
 sudo pacman -S --needed \
   base-devel cmake ninja git pkgconf extra-cmake-modules \
-  qt6-base qt6-declarative qt6-wayland \
-  kcoreaddons kguiaddons kcmutils libkscreen kpipewire plasma-wayland-protocols \
+  qt6-base qt6-declarative qt6-wayland wayland \
+  kconfig kdbusaddons kcoreaddons kguiaddons kcmutils ki18n \
+  kstatusnotifieritem kcrash libkscreen kpipewire plasma-wayland-protocols \
   freerdp qtkeychain-qt6 libxkbcommon libsodium pipewire pipewire-audio openssl
 ```
 

@@ -16,3 +16,5 @@ The package-name source of truth is
 Plasma Wayland 6.3+ session. The container does not replace the host Plasma
 session.
 
+After installation, complete the [live interoperability checks](../testing.md)
+before exposing the service outside a trusted test network.

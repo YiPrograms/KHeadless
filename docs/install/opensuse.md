@@ -7,11 +7,13 @@ supported only when all version checks in the generic guide pass.
 sudo zypper refresh
 sudo zypper install \
   gcc-c++ cmake ninja git pkgconf kf6-extra-cmake-modules \
-  qt6-base-devel qt6-declarative-devel qt6-wayland-devel \
-  kf6-kcoreaddons-devel kf6-kguiaddons-devel kf6-kcmutils-devel libkscreen6-devel \
+  qt6-base-devel qt6-base-private-devel qt6-declarative-devel qt6-wayland-devel \
+  kf6-kconfig-devel kf6-kdbusaddons-devel kf6-kcoreaddons-devel \
+  kf6-kguiaddons-devel kf6-kcmutils-devel kf6-ki18n-devel \
+  kf6-kstatusnotifieritem-devel kf6-kcrash-devel libkscreen6-devel \
   kpipewire6-devel plasma-wayland-protocols \
   freerdp-devel winpr-devel libqt6keychain-devel \
-  libxkbcommon-devel libsodium-devel pipewire-devel pipewire pipewire-tools openssl
+  wayland-devel libxkbcommon-devel libsodium-devel pipewire-devel pipewire pipewire-tools openssl
 ```
 
 Package names occasionally transition during Tumbleweed snapshots. If a
